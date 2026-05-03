@@ -3,43 +3,390 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VK - الرئيسية</title>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <title>ROYAL SCENT | متجر العطور الفاخرة</title>
+    <meta name="description" content="متجر العطور الفاخرة - أفخم العطور العالمية بتصميم زجاجي عصري">
+    <link rel="stylesheet" href="css/glass-morphism.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/bubbles.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <aside class="sidebar">
-        <div class="sidebar-logo">VK</div>
-        <ul class="sidebar-nav">
-            <li><a href="index.html" class="active"><i class="fas fa-home"></i> <span>الرئيسية</span></a></li>
-            <li><a href="profile.html"><i class="fas fa-user"></i> <span>ملفي الشخصي</span></a></li>
-            <li><a href="friends.html"><i class="fas fa-users"></i> <span>الأصدقاء</span></a></li>
-            <li><a href="messages.html"><i class="fas fa-envelope"></i> <span>الرسائل</span></a></li>
-            <li><a href="#" id="admin-link" style="display:none;"><i class="fas fa-crown"></i> <span>لوحة الأدمن</span></a></li>
-            <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> <span>خروج</span></a></li>
-        </ul>
-    </aside>
-    <main class="main-content">
-        <header class="header">
-            <input type="text" class="header-search" placeholder="🔍 بحث...">
-            <div class="header-user">
-                <span id="header-name" style="color:white;"></span>
-                <img id="header-avatar" class="header-avatar" src="" alt="avatar" onclick="window.location.href='profile.html'">
+    <!-- Animated Bubbles Background -->
+    <div class="bubbles-container">
+        <div class="bubble bubble-1"></div>
+        <div class="bubble bubble-2"></div>
+        <div class="bubble bubble-3"></div>
+        <div class="bubble bubble-4"></div>
+        <div class="bubble bubble-5"></div>
+        <div class="bubble bubble-6"></div>
+        <div class="bubble bubble-7"></div>
+        <div class="bubble bubble-8"></div>
+        <div class="bubble bubble-9"></div>
+        <div class="bubble bubble-10"></div>
+    </div>
+
+    <!-- Floating Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Glass Navigation Bar -->
+    <nav class="glass-nav">
+        <div class="nav-container">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <span class="logo-text">ROYAL SCENT</span>
             </div>
-        </header>
-        <div class="card">
-            <textarea id="post-text" class="input" placeholder="ماذا يدور في بالك؟" rows="2"></textarea>
-            <input type="file" id="post-image" class="input" accept="image/*" style="padding:8px;margin-top:10px;">
-            <button onclick="createPost()" class="btn btn-primary" style="margin-top:10px;"><i class="fas fa-paper-plane ml-2"></i> نشر</button>
+            <div class="nav-links">
+                <a href="#home" class="nav-link active">الرئيسية</a>
+                <a href="#products" class="nav-link">المنتجات</a>
+                <a href="#about" class="nav-link">من نحن</a>
+                <a href="#contact" class="nav-link">اتصل بنا</a>
+                <div class="cart-icon-wrapper" onclick="toggleCart()">
+                    <div class="cart-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span class="cart-badge" id="cartCount">0</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div id="posts-container"></div>
-    </main>
-    <div id="toast" class="toast"></div>
-    <script src="firebase.js"></script>
-    <script src="app.js"></script>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="hero-content">
+            <div class="glass-card hero-card">
+                <span class="premium-badge">✨ مجموعة حصرية 2024</span>
+                <h1 class="hero-title">
+                    اكتشف عالم<br>
+                    <span class="gold-text">العطور الفاخرة</span>
+                </h1>
+                <p class="hero-description">
+                    مجموعة حصرية من أجود العطور العالمية المصممة خصيصاً للأذواق الراقية
+                </p>
+                <div class="hero-actions">
+                    <button class="glass-btn primary-btn" onclick="scrollToSection('products')">
+                        <i class="fas fa-shopping-bag"></i>
+                        تسوق الآن
+                    </button>
+                    <button class="glass-btn secondary-btn" onclick="scrollToSection('about')">
+                        <i class="fas fa-info-circle"></i>
+                        اكتشف المزيد
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="features-grid">
+            <div class="glass-card feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h3>توصيل سريع</h3>
+                <p>توصيل خلال 24 ساعة لجميع المدن</p>
+            </div>
+            <div class="glass-card feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-check"></i>
+                </div>
+                <h3>منتجات أصلية</h3>
+                <p>ضمان الجودة والأصالة 100%</p>
+            </div>
+            <div class="glass-card feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-gift"></i>
+                </div>
+                <h3>تغليف فاخر</h3>
+                <p>تغليف هدايا مميز وأنيق</p>
+            </div>
+            <div class="glass-card feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h3>دعم متواصل</h3>
+                <p>خدمة عملاء على مدار الساعة</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="products-section">
+        <div class="section-header">
+            <span class="section-badge">منتجاتنا</span>
+            <h2 class="section-title">مجموعتنا <span class="gold-text">الفاخرة</span></h2>
+            <p class="section-description">اكتشف تشكيلتنا المميزة من أفخم العطور العالمية</p>
+        </div>
+
+        <div class="filter-buttons">
+            <button class="filter-btn active" onclick="filterProducts('all')">
+                <i class="fas fa-th-large"></i> الكل
+            </button>
+            <button class="filter-btn" onclick="filterProducts('oud')">
+                <i class="fas fa-tree"></i> عود
+            </button>
+            <button class="filter-btn" onclick="filterProducts('musk')">
+                <i class="fas fa-feather"></i> مسك
+            </button>
+            <button class="filter-btn" onclick="filterProducts('floral')">
+                <i class="fas fa-flower"></i> زهري
+            </button>
+            <button class="filter-btn" onclick="filterProducts('oriental')">
+                <i class="fas fa-moon"></i> شرقي
+            </button>
+        </div>
+
+        <div class="products-grid" id="productsGrid">
+            <!-- Products loaded dynamically -->
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="about-content">
+            <div class="about-text">
+                <span class="section-badge">من نحن</span>
+                <h2>قصة <span class="gold-text">الفخامة</span></h2>
+                <p>نحن نقدم أرقى العطور المستوحاة من التراث العربي الأصيل، نمزج بين العراقة والحداثة لنقدم لكم تجربة فريدة من نوعها في عالم العطور الفاخرة.</p>
+                <div class="stats-grid">
+                    <div class="glass-card stat-card">
+                        <span class="stat-number">+1000</span>
+                        <span class="stat-label">عميل سعيد</span>
+                    </div>
+                    <div class="glass-card stat-card">
+                        <span class="stat-number">+500</span>
+                        <span class="stat-label">منتج حصري</span>
+                    </div>
+                    <div class="glass-card stat-card">
+                        <span class="stat-number">+50</span>
+                        <span class="stat-label">مدينة</span>
+                    </div>
+                </div>
+            </div>
+            <div class="about-image">
+                <div class="glass-card image-frame">
+                    <div class="frame-content">
+                        <i class="fas fa-spray-can-sparkles"></i>
+                        <span>ROYAL<br>SCENT</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="section-header">
+            <span class="section-badge">اتصل بنا</span>
+            <h2 class="section-title">تواصل <span class="gold-text">معنا</span></h2>
+        </div>
+        <form class="glass-card contact-form" id="contactForm">
+            <div class="form-row">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" placeholder="الاسم الكامل" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" placeholder="البريد الإلكتروني" required>
+                </div>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-comment"></i>
+                <textarea placeholder="رسالتك..." rows="5" required></textarea>
+            </div>
+            <button type="submit" class="glass-btn primary-btn">
+                <i class="fas fa-paper-plane"></i>
+                إرسال الرسالة
+            </button>
+        </form>
+    </section>
+
+    <!-- Admin Lock Button -->
+    <button class="admin-trigger" onclick="showAdminLock()" title="لوحة التحكم">
+        <i class="fas fa-lock"></i>
+    </button>
+
+    <!-- Admin Lock Modal -->
+    <div id="adminLockModal" class="modal glass-modal">
+        <div class="glass-card lock-card">
+            <div class="lock-header">
+                <div class="lock-icon">
+                    <i class="fas fa-shield-halved"></i>
+                </div>
+                <h2>لوحة التحكم</h2>
+                <p>أدخل رمز الدخول للمتابعة</p>
+            </div>
+            <div class="pin-input-container">
+                <div class="pin-inputs">
+                    <input type="password" maxlength="1" class="pin-input" id="pin1" oninput="pinInput(this)" onkeydown="handlePinKey(event, this)">
+                    <input type="password" maxlength="1" class="pin-input" id="pin2" oninput="pinInput(this)" onkeydown="handlePinKey(event, this)">
+                    <input type="password" maxlength="1" class="pin-input" id="pin3" oninput="pinInput(this)" onkeydown="handlePinKey(event, this)">
+                    <input type="password" maxlength="1" class="pin-input" id="pin4" oninput="pinInput(this)" onkeydown="handlePinKey(event, this)">
+                </div>
+                <div id="pinError" class="pin-error"></div>
+            </div>
+            <div class="lock-actions">
+                <button class="glass-btn secondary-btn" onclick="closeAdminLock()">
+                    <i class="fas fa-times"></i>
+                    إلغاء
+                </button>
+                <button class="glass-btn primary-btn" onclick="verifyPin()">
+                    <i class="fas fa-arrow-right"></i>
+                    دخول
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="admin-panel glass-panel">
+        <div class="panel-header">
+            <div class="panel-title">
+                <i class="fas fa-crown"></i>
+                <h2>إدارة المنتجات</h2>
+            </div>
+            <button class="close-panel" onclick="closeAdminPanel()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <form id="productForm" class="admin-form">
+            <!-- صورة المنتج -->
+            <div class="form-section">
+                <h3><i class="fas fa-image"></i> صورة المنتج</h3>
+                <div class="upload-glass" id="uploadArea">
+                    <input type="file" id="imageUpload" accept="image/*" hidden onchange="handleImageUpload(event)">
+                    <div class="upload-content">
+                        <i class="fas fa-cloud-upload-alt upload-main-icon"></i>
+                        <p>اسحب وأفلت الصورة هنا</p>
+                        <span class="upload-divider">أو</span>
+                        <button type="button" class="glass-btn secondary-btn" onclick="document.getElementById('imageUpload').click()">
+                            <i class="fas fa-folder-open"></i>
+                            اختر صورة
+                        </button>
+                        <p class="upload-hint">يدعم PNG, JPG, WEBP حتى 10MB</p>
+                    </div>
+                </div>
+                <div id="uploadProgress" class="upload-progress"></div>
+                <div id="imagePreview" class="image-preview-glass"></div>
+                <input type="hidden" id="productImage" required>
+            </div>
+
+            <!-- تفاصيل المنتج -->
+            <div class="form-section">
+                <h3><i class="fas fa-info-circle"></i> تفاصيل المنتج</h3>
+                
+                <div class="input-glass">
+                    <i class="fas fa-tag"></i>
+                    <input type="text" id="productName" placeholder="اسم المنتج" required>
+                </div>
+                
+                <div class="input-glass">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <input type="number" id="productPrice" placeholder="السعر (ريال)" required>
+                </div>
+                
+                <div class="input-glass">
+                    <i class="fas fa-layer-group"></i>
+                    <select id="productCategory" required>
+                        <option value="">اختر التصنيف...</option>
+                        <option value="oud">🪵 عود</option>
+                        <option value="musk">🤍 مسك</option>
+                        <option value="floral">🌸 زهري</option>
+                        <option value="oriental">🌙 شرقي</option>
+                    </select>
+                </div>
+                
+                <div class="input-glass">
+                    <i class="fas fa-align-left"></i>
+                    <textarea id="productDescription" placeholder="وصف المنتج..." rows="4" required></textarea>
+                </div>
+            </div>
+
+            <!-- أزرار التحكم -->
+            <div class="form-actions">
+                <button type="submit" class="glass-btn primary-btn">
+                    <i class="fas fa-plus-circle"></i>
+                    إضافة المنتج
+                </button>
+                <button type="button" class="glass-btn secondary-btn" onclick="resetAdminForm()">
+                    <i class="fas fa-redo"></i>
+                    مسح النموذج
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Shopping Cart Modal -->
+    <div id="cartModal" class="modal glass-modal">
+        <div class="glass-card cart-card">
+            <div class="cart-header">
+                <h2><i class="fas fa-shopping-bag"></i> سلة التسوق</h2>
+                <button class="close-cart" onclick="toggleCart()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="cartItems" class="cart-items">
+                <div class="empty-cart-state">
+                    <i class="fas fa-shopping-bag"></i>
+                    <p>سلة التسوق فارغة</p>
+                    <span>ابدأ التسوق وأضف منتجاتك المفضلة</span>
+                </div>
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>المجموع:</span>
+                    <span id="cartTotal" class="total-price">0 ريال</span>
+                </div>
+                <button class="glass-btn primary-btn full-width" onclick="checkout()">
+                    <i class="fas fa-credit-card"></i>
+                    إتمام الشراء
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="glass-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <i class="fas fa-crown"></i>
+                <h3>ROYAL SCENT</h3>
+                <p>متجر العطور الفاخرة</p>
+            </div>
+            <div class="footer-links">
+                <h4>روابط سريعة</h4>
+                <a href="#home">الرئيسية</a>
+                <a href="#products">المنتجات</a>
+                <a href="#about">من نحن</a>
+                <a href="#contact">اتصل بنا</a>
+            </div>
+            <div class="footer-contact">
+                <h4>تواصل معنا</h4>
+                <p><i class="fas fa-envelope"></i> info@royalscent.com</p>
+                <p><i class="fas fa-phone"></i> +966 50 000 0000</p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 ROYAL SCENT - جميع الحقوق محفوظة</p>
+        </div>
+    </footer>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="js/products.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
