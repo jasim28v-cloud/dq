@@ -1,0 +1,38 @@
+name: 🔄 VK Clone Builder
+
+on:
+  schedule:
+    - cron: '0 */3 * * *'
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: 📥 استنساخ
+        uses: actions/checkout@v4
+
+      - name: 🐍 بايثون
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 🏗️ بناء الموقع
+        run: python scraper.py
+
+      - name: 📤 رفع
+        run: |
+          git config --global user.name 'vk-bot'
+          git config --global user.email 'vk@bot.com'
+          git add -A
+          git commit -m "🏗️ VK Clone Build - $(date +'%Y-%m-%d %H:%M')" || true
+          git push origin main
