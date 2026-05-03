@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VK - الرئيسية</title>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-logo">VK</div>
+        <ul class="sidebar-nav">
+            <li><a href="index.html" class="active"><i class="fas fa-home"></i> <span>الرئيسية</span></a></li>
+            <li><a href="profile.html"><i class="fas fa-user"></i> <span>ملفي الشخصي</span></a></li>
+            <li><a href="friends.html"><i class="fas fa-users"></i> <span>الأصدقاء</span></a></li>
+            <li><a href="messages.html"><i class="fas fa-envelope"></i> <span>الرسائل</span></a></li>
+            <li><a href="#" id="admin-link" style="display:none;"><i class="fas fa-crown"></i> <span>لوحة الأدمن</span></a></li>
+            <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> <span>خروج</span></a></li>
+        </ul>
+    </aside>
+    <main class="main-content">
+        <header class="header">
+            <input type="text" class="header-search" placeholder="🔍 بحث...">
+            <div class="header-user">
+                <span id="header-name" style="color:white;"></span>
+                <img id="header-avatar" class="header-avatar" src="" alt="avatar" onclick="window.location.href='profile.html'">
+            </div>
+        </header>
+        <div class="card">
+            <textarea id="post-text" class="input" placeholder="ماذا يدور في بالك؟" rows="2"></textarea>
+            <input type="file" id="post-image" class="input" accept="image/*" style="padding:8px;margin-top:10px;">
+            <button onclick="createPost()" class="btn btn-primary" style="margin-top:10px;"><i class="fas fa-paper-plane ml-2"></i> نشر</button>
+        </div>
+        <div id="posts-container"></div>
+    </main>
+    <div id="toast" class="toast"></div>
+    <script src="firebase.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

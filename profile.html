@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>VK - الملف الشخصي</title>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <aside class="sidebar"><div class="sidebar-logo">VK</div><ul class="sidebar-nav">
+        <li><a href="index.html"><i class="fas fa-home"></i><span>الرئيسية</span></a></li>
+        <li><a href="profile.html" class="active"><i class="fas fa-user"></i><span>ملفي الشخصي</span></a></li>
+        <li><a href="friends.html"><i class="fas fa-users"></i><span>الأصدقاء</span></a></li>
+        <li><a href="messages.html"><i class="fas fa-envelope"></i><span>الرسائل</span></a></li>
+        <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span>خروج</span></a></li>
+    </ul></aside>
+    <main class="main-content">
+        <div class="card" style="text-align:center;">
+            <img id="profile-photo" src="" style="width:150px;height:150px;border-radius:50%;object-fit:cover;border:4px solid var(--vk-blue);margin:20px auto;display:block;">
+            <h1 id="profile-name" style="color:white;font-size:28px;"></h1><p id="profile-email" style="color:#94a3b8;"></p>
+            <p id="profile-role" style="color:#fbbf24;font-size:14px;"></p><p id="profile-date" style="color:#64748b;font-size:12px;"></p>
+            <button onclick="editProfile()" class="btn btn-primary" style="margin-top:20px;"><i class="fas fa-edit ml-2"></i>تعديل الملف الشخصي</button>
+        </div>
+        <h3 style="color:white;margin:20px 0;">📝 منشوراتي</h3><div id="my-posts"></div>
+    </main>
+    <div id="edit-modal" class="modal"><div class="modal-content">
+        <h3 class="modal-title">تعديل الملف الشخصي</h3>
+        <input type="text" id="edit-name" class="input" placeholder="الاسم"><input type="file" id="edit-photo" class="input" accept="image/*">
+        <button onclick="saveProfile()" class="btn btn-primary" style="width:100%;">حفظ</button>
+        <button onclick="closeModal()" class="btn btn-glass" style="width:100%;margin-top:10px;">إلغاء</button>
+    </div></div>
+    <script src="firebase.js"></script>
+    <script>
+        let currentUser;
+        auth.onAuthStateChanged(async (user) => { if (!user) { window.location.href = 'login.html'; return; } currentUser = user; await loadProfile(); await loadMyPosts(); });
+        async function loadProfile() { const s = await db.ref('users/' + currentUser.uid).once('value'); const d = s.val(); if (d) { document.getElementById('profile-photo').src = d.photo || 'https://via.placeholder.com/150'; document.getElementById('profile-name').textContent = d.name; document.getElementById('profile-email').textContent = d.email; document.getElementById('profile-role').textContent = d.role === 'admin' ? '👑 أدمن' : '👤 عضو'; document.getElementById('profile-date').textContent = 'عضو منذ: ' + new Date(d.created_at).toLocaleDateString('ar-IQ'); } }
+        async function loadMyPosts() { const s = await db.ref('posts').orderByChild('user_id').equalTo(currentUser.uid).once('value'); const p = s.val(); const c = document.getElementById('my-posts'); c.innerHTML = ''; if (!p) { c.innerHTML = '<p style="color:#64748b;">لا توجد منشورات</p>'; return; } for (const [id, post] of Object.entries(p).reverse()) { c.innerHTML += `<div class="card"><div class="post-text">${post.text}</div>${post.image ? '<img src="'+post.image+'" class="post-image">' : ''}<div class="post-actions"><button onclick="deletePost('${id}')"><i class="fas fa-trash"></i> حذف</button></div></div>`; } }
+        async function deletePost(id) { if (confirm('حذف المنشور؟')) { await db.ref('posts/' + id).remove(); loadMyPosts(); } }
+        function editProfile() { document.getElementById('edit-modal').classList.add('active'); }
+        async function saveProfile() { const n = document.getElementById('edit-name').value; const f = document.getElementById('edit-photo').files[0]; const u = {}; if (n) u.name = n; if (f) { const fd = new FormData(); fd.append('file', f); fd.append('upload_preset', cloudinaryConfig.uploadPreset); const r = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`, { method: 'POST', body: fd }); u.photo = (await r.json()).secure_url; } await db.ref('users/' + currentUser.uid).update(u); closeModal(); loadProfile(); }
+        function closeModal() { document.getElementById('edit-modal').classList.remove('active'); }
+        function logout() { auth.signOut().then(() => window.location.href = 'login.html'); }
+    </script>
+</body>
+</html>

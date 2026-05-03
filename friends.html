@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>VK - الأصدقاء</title>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <aside class="sidebar"><div class="sidebar-logo">VK</div><ul class="sidebar-nav">
+        <li><a href="index.html"><i class="fas fa-home"></i><span>الرئيسية</span></a></li>
+        <li><a href="profile.html"><i class="fas fa-user"></i><span>ملفي الشخصي</span></a></li>
+        <li><a href="friends.html" class="active"><i class="fas fa-users"></i><span>الأصدقاء</span></a></li>
+        <li><a href="messages.html"><i class="fas fa-envelope"></i><span>الرسائل</span></a></li>
+        <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span>خروج</span></a></li>
+    </ul></aside>
+    <main class="main-content">
+        <header class="header"><input type="text" class="header-search" id="search-user" placeholder="🔍 بحث عن عضو..."></header>
+        <div class="card"><h3 style="color:white;margin-bottom:20px;">👥 كل الأعضاء</h3><div id="all-users"></div></div>
+        <div class="card"><h3 style="color:white;margin-bottom:20px;">💚 أصدقائي</h3><div id="my-friends"></div></div>
+    </main>
+    <script src="firebase.js"></script>
+    <script>
+        let currentUser;
+        auth.onAuthStateChanged(async (user) => { if (!user) { window.location.href = 'login.html'; return; } currentUser = user; loadAllUsers(); loadMyFriends(); });
+        async function loadAllUsers() { const s = await db.ref('users').once('value'); const u = s.val(); const c = document.getElementById('all-users'); c.innerHTML = ''; for (const [uid, d] of Object.entries(u)) { if (uid === currentUser.uid) continue; c.innerHTML += `<div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--vk-glass);border-radius:12px;margin-bottom:8px;"><div style="display:flex;align-items:center;gap:10px;"><img src="${d.photo||'https://via.placeholder.com/40'}" style="width:40px;height:40px;border-radius:50%;"><span style="color:white;">${d.name}</span></div><button onclick="addFriend('${uid}')" class="btn btn-primary" style="font-size:12px;padding:5px 15px;"><i class="fas fa-user-plus"></i>إضافة</button></div>`; } }
+        async function addFriend(fid) { await db.ref('friends/' + currentUser.uid + '/' + fid).set(true); await db.ref('friends/' + fid + '/' + currentUser.uid).set(true); loadMyFriends(); }
+        async function loadMyFriends() { const s = await db.ref('friends/' + currentUser.uid).once('value'); const f = s.val(); const c = document.getElementById('my-friends'); c.innerHTML = ''; if (!f) { c.innerHTML = '<p style="color:#64748b;">لا أصدقاء بعد</p>'; return; } for (const [fid, _] of Object.entries(f)) { const us = await db.ref('users/' + fid).once('value'); const u = us.val(); if (u) { c.innerHTML += `<div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--vk-glass);border-radius:12px;margin-bottom:8px;"><div style="display:flex;align-items:center;gap:10px;"><img src="${u.photo||'https://via.placeholder.com/40'}" style="width:40px;height:40px;border-radius:50%;"><span style="color:white;">${u.name}</span></div><button onclick="removeFriend('${fid}')" class="btn btn-glass" style="font-size:12px;"><i class="fas fa-user-times"></i>حذف</button></div>`; } } }
+        async function removeFriend(fid) { await db.ref('friends/' + currentUser.uid + '/' + fid).remove(); await db.ref('friends/' + fid + '/' + currentUser.uid).remove(); loadMyFriends(); }
+        function logout() { auth.signOut().then(() => window.location.href = 'login.html'); }
+    </script>
+</body>
+</html>

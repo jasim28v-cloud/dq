@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>VK - لوحة الأدمن</title>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <aside class="sidebar"><div class="sidebar-logo">VK</div><ul class="sidebar-nav">
+        <li><a href="index.html"><i class="fas fa-home"></i><span>الرئيسية</span></a></li>
+        <li><a href="profile.html"><i class="fas fa-user"></i><span>ملفي الشخصي</span></a></li>
+        <li><a href="admin.html" class="active"><i class="fas fa-crown"></i><span>لوحة الأدمن</span></a></li>
+        <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span>خروج</span></a></li>
+    </ul></aside>
+    <main class="main-content">
+        <header class="header"><h2 style="color:white;">👑 لوحة تحكم الأدمن</h2></header>
+        <div class="card"><h3 style="color:white;margin-bottom:20px;">👥 إدارة الأعضاء</h3><div id="users-list"></div></div>
+    </main>
+    <script src="firebase.js"></script>
+    <script>
+        auth.onAuthStateChanged(async (user) => { if (!user) { window.location.href = 'login.html'; return; } const s = await db.ref('users/' + user.uid).once('value'); const d = s.val(); if (!d || d.role !== 'admin') { alert('غير مصرح!'); window.location.href = 'index.html'; return; } loadUsers(); });
+        async function loadUsers() { const s = await db.ref('users').once('value'); const u = s.val(); const c = document.getElementById('users-list'); c.innerHTML = ''; for (const [uid, d] of Object.entries(u)) { c.innerHTML += `<div style="display:flex;align-items:center;justify-content:space-between;padding:15px;background:var(--vk-glass);border-radius:12px;margin-bottom:10px;"><div style="display:flex;align-items:center;gap:10px;"><img src="${d.photo||'https://via.placeholder.com/40'}" style="width:40px;height:40px;border-radius:50%;"><div><span style="color:white;font-weight:700;">${d.name}</span><span style="font-size:11px;color:#64748b;display:block;">${d.email}</span></div></div><div><span style="color:#fbbf24;font-size:12px;">${d.role}</span><button onclick="deleteUser('${uid}')" class="btn btn-glass" style="font-size:11px;padding:5px 10px;margin-right:10px;"><i class="fas fa-trash"></i>حذف</button></div></div>`; } }
+        async function deleteUser(uid) { if (confirm('حذف العضو؟')) { await db.ref('users/' + uid).remove(); loadUsers(); } }
+        function logout() { auth.signOut().then(() => window.location.href = 'login.html'); }
+    </script>
+</body>
+</html>
